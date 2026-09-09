@@ -1,26 +1,34 @@
 [
-    {
-        "url": "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/q-rtx-4090/?search%5Border%5D=created_at:desc&search%5Bfilter_float_price:from%5D=500&search%5Bfilter_float_price:to%5D=6000&search%5Bfilter_enum_graphicscardmemory%5D%5B0%5D=16gb-and-more",
-        "min_price": 1000,
-        "max_price": 6000,
-        "required_keyword": "4090"
-    },
-    {
-        "url": "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/q-rtx-4080/?search%5Border%5D=created_at:desc&search%5Bfilter_float_price:from%5D=500&search%5Bfilter_float_price:to%5D=3500&search%5Bfilter_enum_graphicscardmemory%5D%5B0%5D=16gb-and-more",
-        "min_price": 1000,
-        "max_price": 3000,
-        "required_keyword": "4080"
-    },
-    {
-        "url": "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/q-rtx-4070/?search%5Border%5D=created_at:desc&search%5Bfilter_float_price:from%5D=500&search%5Bfilter_float_price:to%5D=3000",
-        "min_price": 1000,
-        "max_price": 2100,
-        "required_keyword": "4070"
-    },
-    {
-        "url": "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/q-rtx-4060/?search%5Border%5D=created_at:desc&search%5Bfilter_float_price:from%5D=500&search%5Bfilter_float_price:to%5D=1000",
-        "min_price": 500,
-        "max_price": 1000,
-        "required_keyword": "4060"
-    }
+  {
+    "name": "🔥 ESP LTD Fire-Sale (400/1000 Series)",
+    "query": "ESP LTD EC OR ESP LTD MH OR ESP LTD Horizon OR ESP LTD Deluxe",
+    "price_min": 750,
+    "price_max": 1450,
+    "category_id": 751,
+    "exclude_words": ["EC-10", "M-10", "F-10", "EC-50", "pokrowiec", "wzmacniacz"]
+  },
+  {
+    "name": "🔥 Schecter Korea / Diamond Series Steal",
+    "query": "Schecter C-1 OR Schecter Hellraiser OR Schecter Blackjack OR Schecter Damien",
+    "price_min": 700,
+    "price_max": 1400,
+    "category_id": 751,
+    "exclude_words": ["SGR", "SGR C-1", "Omen 6", "statyw", "pasek"]
+  },
+  {
+    "name": "🔥 JDM Superstrats (Jackson/Fernandes/Greco)",
+    "query": "Grover Jackson OR Jackson Stealth OR Fernandes Revolver OR Greco Fujigen",
+    "price_min": 750,
+    "price_max": 1350,
+    "category_id": 751,
+    "exclude_words": ["JS11", "JS22", "JS32", "Squier", "futerał"]
+  },
+  {
+    "name": "👁️ Blind Spot Catch-All (Vague Titles)",
+    "query": "japońska gitara OR gitara japan OR gitara EMG",
+    "price_min": 600,
+    "price_max": 1100,
+    "category_id": 751,
+    "exclude_words": ["akustyczna", "klasyczna", "ukulele", "efekt"]
+  }
 ]
