@@ -3,24 +3,24 @@
     "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=750&search%5Bfilter_float_price%3Ato%5D=1450&search%5Bq%5D=Grover%20Jackson%20OR%20Fernandes%20OR%20Greco",
     "min_price": 750,
     "max_price": 1450,
-    "exclude_words": ["JS11", "JS22", "JS32", "Squier", "futerał", "statyw", "przystawka", "GIO"]
+    "required_keyword": "gitara"
   },
   {
     "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=750&search%5Bfilter_float_price%3Ato%5D=1450&search%5Bq%5D=ESP%20LTD",
     "min_price": 750,
     "max_price": 1450,
-    "exclude_words": ["EC-10", "M-10", "F-10", "EC-50", "pokrowiec", "wzmacniacz"]
+    "required_keyword": "LTD"
   },
   {
     "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=700&search%5Bfilter_float_price%3Ato%5D=1400&search%5Bq%5D=Schecter",
     "min_price": 700,
     "max_price": 1400,
-    "exclude_words": ["SGR", "SGR C-1", "Omen 6", "statyw", "pasek"]
+    "required_keyword": "Schecter"
   },
   {
     "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=600&search%5Bfilter_float_price%3Ato%5D=1100&search%5Bq%5D=japo%C5%84ska%20gitara%20OR%20gitara%20japan",
     "min_price": 600,
     "max_price": 1100,
-    "exclude_words": ["akustyczna", "klasyczna", "ukulele", "efekt"]
+    "required_keyword": "gitara"
   }
 ]
