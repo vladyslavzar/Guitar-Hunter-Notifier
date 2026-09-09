@@ -1,34 +1,22 @@
 [
   {
-    "name": "🔥 ESP LTD Fire-Sale (400/1000 Series)",
-    "query": "ESP LTD EC OR ESP LTD MH OR ESP LTD Horizon OR ESP LTD Deluxe",
-    "price_min": 750,
-    "price_max": 1450,
-    "category_id": 751,
+    "name": "Jackson / Fernandes / Greco MIJ Hunter",
+    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=750&search%5Bfilter_float_price%3Ato%5D=1450&search%5Bq%5D=Grover%20Jackson%20OR%20Fernandes%20OR%20Greco",
+    "exclude_words": ["JS11", "JS22", "JS32", "Squier", "futerał", "statyw", "przystawka", "GIO"]
+  },
+  {
+    "name": "ESP LTD Fire-Sale",
+    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=750&search%5Bfilter_float_price%3Ato%5D=1450&search%5Bq%5D=ESP%20LTD",
     "exclude_words": ["EC-10", "M-10", "F-10", "EC-50", "pokrowiec", "wzmacniacz"]
   },
   {
-    "name": "🔥 Schecter Korea / Diamond Series Steal",
-    "query": "Schecter C-1 OR Schecter Hellraiser OR Schecter Blackjack OR Schecter Damien",
-    "price_min": 700,
-    "price_max": 1400,
-    "category_id": 751,
+    "name": "Schecter Korea Steal",
+    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=700&search%5Bfilter_float_price%3Ato%5D=1400&search%5Bq%5D=Schecter",
     "exclude_words": ["SGR", "SGR C-1", "Omen 6", "statyw", "pasek"]
   },
   {
-    "name": "🔥 JDM Superstrats (Jackson/Fernandes/Greco)",
-    "query": "Grover Jackson OR Jackson Stealth OR Fernandes Revolver OR Greco Fujigen",
-    "price_min": 750,
-    "price_max": 1350,
-    "category_id": 751,
-    "exclude_words": ["JS11", "JS22", "JS32", "Squier", "futerał"]
-  },
-  {
-    "name": "👁️ Blind Spot Catch-All (Vague Titles)",
-    "query": "japońska gitara OR gitara japan OR gitara EMG",
-    "price_min": 600,
-    "price_max": 1100,
-    "category_id": 751,
+    "name": "Blind Spot Japan Catch-All",
+    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=600&search%5Bfilter_float_price%3Ato%5D=1100&search%5Bq%5D=japo%C5%84ska%20gitara%20OR%20gitara%20japan",
     "exclude_words": ["akustyczna", "klasyczna", "ukulele", "efekt"]
   }
 ]
