@@ -3,6 +3,7 @@ import json
 import time
 import random
 import threading
+from datetime import datetime, timedelta, timezone
 import dotenv
 from flask import Flask
 from curl_cffi import requests
@@ -26,14 +27,16 @@ threading.Thread(target=run_flask, daemon=True).start()
 SCRAPE_DELAY_MIN = 3
 SCRAPE_DELAY_MAX = 6
 REPEAT_DELAY = 300
+MAX_AGE_DAYS = 14  # Cutoff for old listings
 
-# Load cache safely
+# Load cache safely and use a Set for O(1) lookup
 try:
     with open("shown_ids.json", "r") as f:
-        shown_ids = [str(x) for x in json.loads(f.read())]
+        shown_ids_list = json.loads(f.read())
+        shown_ids = set(str(x) for x in shown_ids_list)
 except Exception as e:
     print(f"[INIT] Warning: Could not read shown_ids.json ({e}). Initializing empty cache.", flush=True)
-    shown_ids = []
+    shown_ids = set()
 
 dotenv.load_dotenv()
 notifier = Notifier()
@@ -52,6 +55,34 @@ headers = {
     'Cache-Control': 'max-age=0'
 }
 
+def enforce_newest_sort(url: str) -> str:
+    """Ensures search[order]=created_at:desc is appended to the OLX URL."""
+    if "search%5Border%5D=" in url or "search[order]=" in url:
+        return url
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}search%5Border%5D=created_at%3Adesc"
+
+def is_listing_too_old(offer: dict, max_days=MAX_AGE_DAYS) -> bool:
+    """Checks created_time or pushup_time to skip listings older than MAX_AGE_DAYS."""
+    raw_time = offer.get("created_time") or offer.get("pushup_time") or offer.get("created_at")
+    if not raw_time:
+        return False  # If timestamp field is absent, default to processing
+
+    try:
+        # ISO string handling (e.g., '2026-09-01T12:00:00+02:00')
+        if isinstance(raw_time, str):
+            created_dt = datetime.fromisoformat(raw_time)
+        # Unix timestamp handling
+        elif isinstance(raw_time, (int, float)):
+            created_dt = datetime.fromtimestamp(raw_time, tz=timezone.utc)
+        else:
+            return False
+
+        cutoff_date = datetime.now(created_dt.tzinfo) - timedelta(days=max_days)
+        return created_dt < cutoff_date
+    except Exception:
+        return False
+
 INITIAL_RUN = True
 print("[INIT] Initialization complete. Starting scraper loop...", flush=True)
 
@@ -67,7 +98,11 @@ while True:
         continue
 
     for index, search in enumerate(searches, start=1):
-        url = search.get('url')
+        raw_url = search.get('url')
+        if not raw_url:
+            continue
+
+        url = enforce_newest_sort(raw_url)
         min_price = search.get('min_price', 0)
         max_price = search.get('max_price', 999999)
         required_keyword = search.get('required_keyword', '')
@@ -103,9 +138,19 @@ while True:
                 if not isinstance(offer, dict):
                     continue
 
+                offer_id = str(offer.get('id', ''))
+                
+                # 1. Skip duplicates immediately via set
+                if offer_id in shown_ids:
+                    continue
+
+                # 2. Skip listings older than MAX_AGE_DAYS
+                if is_listing_too_old(offer):
+                    shown_ids.add(offer_id)  # Cache ID to avoid re-checking
+                    continue
+
                 title = offer.get('title', '')
                 offer_url = offer.get('url', '')
-                offer_id = str(offer.get('id', ''))
 
                 # Safe price parsing
                 price_obj = offer.get("price") or {}
@@ -119,10 +164,8 @@ while True:
                     continue
                 if price < min_price or price > max_price:
                     continue
-                if offer_id in shown_ids:
-                    continue
 
-                shown_ids.append(offer_id)
+                shown_ids.add(offer_id)
 
                 if INITIAL_RUN:
                     print(f"    [SEEDING] Cached existing listing: {title} ({price} PLN)", flush=True)
@@ -136,7 +179,7 @@ while True:
 
             # Save state
             with open("shown_ids.json", "w") as f:
-                f.write(json.dumps(shown_ids))
+                f.write(json.dumps(list(shown_ids)))
 
             if matches_found == 0 and not INITIAL_RUN:
                 print("    -> Parsed successfully (No new matching listings).", flush=True)
