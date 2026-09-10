@@ -1,30 +1,30 @@
 [
   {
-    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=100&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=LTD",
+    "url": "https://www.olx.pl/elektronika/instrumenty/gitary/q-ltd/",
     "min_price": 100,
     "max_price": 15000,
     "required_keyword": "LTD"
   },
   {
-    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=100&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=Schecter",
+    "url": "https://www.olx.pl/elektronika/instrumenty/gitary/q-schecter/",
     "min_price": 100,
     "max_price": 15000,
     "required_keyword": "Schecter"
   },
   {
-    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=100&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=Jackson",
+    "url": "https://www.olx.pl/elektronika/instrumenty/gitary/q-jackson/",
     "min_price": 100,
     "max_price": 15000,
     "required_keyword": "Jackson"
   },
   {
-    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=100&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=Fernandes",
+    "url": "https://www.olx.pl/elektronika/instrumenty/gitary/q-fernandes/",
     "min_price": 100,
     "max_price": 15000,
     "required_keyword": "Fernandes"
   },
   {
-    "url": "https://www.olx.pl/d/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/?search%5Bfilter_float_price%3Afrom%5D=500&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=RTX",
+    "url": "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/q-rtx/",
     "min_price": 500,
     "max_price": 15000,
     "required_keyword": "RTX"
