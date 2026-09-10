@@ -4,6 +4,24 @@ from telegram_notifier import Notifier
 import json
 import time
 
+import os
+import threading
+from flask import Flask
+
+# Dummy HTTP server for Render health checks
+app = Flask(__name__)
+
+@app.route('/')
+def health_check():
+    return "OLX Bot is active", 200
+
+def run_flask():
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
+
+# Run Flask server in a background thread
+threading.Thread(target=run_flask, daemon=True).start()
+
 SCRAPE_DELAY=1
 REPEAT_DELAY=300
 
