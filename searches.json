@@ -1,80 +1,74 @@
 [
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-solar/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-solar/",
     "min_price": 1000,
     "max_price": 3200,
     "required_keyword": "Solar"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-charvel/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-charvel/",
     "min_price": 1000,
     "max_price": 3000,
     "required_keyword": "Charvel"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-kramer/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-kramer/",
     "min_price": 500,
     "max_price": 2500,
     "required_keyword": "Kramer"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-evh/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-evh/",
     "min_price": 1000,
     "max_price": 3000,
     "required_keyword": "EVH"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-yamaha-pacifica/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-yamaha-pacifica/",
     "min_price": 400,
     "max_price": 1800,
     "required_keyword": "Pacifica"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-dean/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-dean/",
     "min_price": 600,
     "max_price": 2500,
     "required_keyword": "Dean"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-jackson/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-jackson/",
     "min_price": 500,
     "max_price": 2500,
     "required_keyword": "Jackson"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-ltd/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-ltd/",
     "min_price": 700,
     "max_price": 3000,
     "required_keyword": "LTD"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-schecter/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-schecter/",
     "min_price": 700,
     "max_price": 2800,
     "required_keyword": "Schecter"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-ibanez/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-ibanez/",
     "min_price": 600,
     "max_price": 2500,
     "required_keyword": "Ibanez"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-fernandes/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-fernandes/",
     "min_price": 800,
     "max_price": 3000,
     "required_keyword": "Fernandes"
   },
   {
-    "url": "https://www.olx.pl/muzyka-edukacja/gitary/q-greco/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/gitary/q-greco/",
     "min_price": 1000,
     "max_price": 3500,
     "required_keyword": "Greco"
-  },
-  {
-    "url": "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/q-rtx/",
-    "min_price": 800,
-    "max_price": 2200,
-    "required_keyword": "RTX"
   }
 ]
