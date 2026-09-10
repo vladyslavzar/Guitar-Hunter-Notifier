@@ -1,26 +1,32 @@
 [
   {
-    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=750&search%5Bfilter_float_price%3Ato%5D=1450&search%5Bq%5D=Grover%20Jackson%20OR%20Fernandes%20OR%20Greco",
-    "min_price": 750,
-    "max_price": 1450,
-    "required_keyword": "gitara"
-  },
-  {
-    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=750&search%5Bfilter_float_price%3Ato%5D=1450&search%5Bq%5D=ESP%20LTD",
-    "min_price": 750,
-    "max_price": 1450,
+    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=100&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=LTD",
+    "min_price": 100,
+    "max_price": 15000,
     "required_keyword": "LTD"
   },
   {
-    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=700&search%5Bfilter_float_price%3Ato%5D=1400&search%5Bq%5D=Schecter",
-    "min_price": 700,
-    "max_price": 1400,
+    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=100&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=Schecter",
+    "min_price": 100,
+    "max_price": 15000,
     "required_keyword": "Schecter"
   },
   {
-    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=600&search%5Bfilter_float_price%3Ato%5D=1100&search%5Bq%5D=japo%C5%84ska%20gitara%20OR%20gitara%20japan",
-    "min_price": 600,
-    "max_price": 1100,
-    "required_keyword": "gitara"
+    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=100&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=Jackson",
+    "min_price": 100,
+    "max_price": 15000,
+    "required_keyword": "Jackson"
+  },
+  {
+    "url": "https://www.olx.pl/d/elektronika/instrumenty/gitary/?search%5Bfilter_float_price%3Afrom%5D=100&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=Fernandes",
+    "min_price": 100,
+    "max_price": 15000,
+    "required_keyword": "Fernandes"
+  },
+  {
+    "url": "https://www.olx.pl/d/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/?search%5Bfilter_float_price%3Afrom%5D=500&search%5Bfilter_float_price%3Ato%5D=15000&search%5Bq%5D=RTX",
+    "min_price": 500,
+    "max_price": 15000,
+    "required_keyword": "RTX"
   }
 ]
