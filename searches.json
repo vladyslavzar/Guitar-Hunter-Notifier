@@ -1,27 +1,33 @@
 [
   {
-    "url": "https://www.olx.pl/elektronika/instrumenty/gitary/q-ltd/",
-    "min_price": 100,
-    "max_price": 15000,
-    "required_keyword": "LTD"
-  },
-  {
-    "url": "https://www.olx.pl/elektronika/instrumenty/gitary/q-schecter/",
-    "min_price": 100,
-    "max_price": 15000,
-    "required_keyword": "Schecter"
-  },
-  {
-    "url": "https://www.olx.pl/elektronika/instrumenty/gitary/q-jackson/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/q-jackson/",
     "min_price": 100,
     "max_price": 15000,
     "required_keyword": "Jackson"
   },
   {
-    "url": "https://www.olx.pl/elektronika/instrumenty/gitary/q-fernandes/",
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/q-ltd/",
+    "min_price": 100,
+    "max_price": 15000,
+    "required_keyword": "LTD"
+  },
+  {
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/q-schecter/",
+    "min_price": 100,
+    "max_price": 15000,
+    "required_keyword": "Schecter"
+  },
+  {
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/q-fernandes/",
     "min_price": 100,
     "max_price": 15000,
     "required_keyword": "Fernandes"
+  },
+  {
+    "url": "https://www.olx.pl/muzyka-edukacja/instrumenty/q-greco/",
+    "min_price": 100,
+    "max_price": 15000,
+    "required_keyword": "Greco"
   },
   {
     "url": "https://www.olx.pl/elektronika/komputery/podzespoly-i-czesci/karty-graficzne/q-rtx/",
