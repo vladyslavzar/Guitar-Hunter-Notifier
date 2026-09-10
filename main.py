@@ -30,7 +30,7 @@ REPEAT_DELAY = 300
 # Load cache safely
 try:
     with open("shown_ids.json", "r") as f:
-        shown_ids = json.loads(f.read())
+        shown_ids = [str(x) for x in json.loads(f.read())]
 except Exception as e:
     print(f"[INIT] Warning: Could not read shown_ids.json ({e}). Initializing empty cache.", flush=True)
     shown_ids = []
@@ -52,6 +52,7 @@ headers = {
     'Cache-Control': 'max-age=0'
 }
 
+INITIAL_RUN = True
 print("[INIT] Initialization complete. Starting scraper loop...", flush=True)
 
 while True:
@@ -74,7 +75,6 @@ while True:
         print(f"[{index}/{len(searches)}] Fetching: {url}", flush=True)
 
         try:
-            # impersonate="chrome120" spoofs real browser TLS fingerprints to bypass 403 Cloudflare blocks
             response = requests.get(url, headers=headers, impersonate="chrome120", timeout=15)
             print(f"    -> Response Status: {response.status_code}", flush=True)
 
@@ -90,7 +90,6 @@ while True:
                 print("    [WARN] Pre-rendered state JSON tags not found in response DOM.", flush=True)
                 continue
 
-            # Safely extract window state JSON string
             data = data[data.find(start_tag) + len(start_tag):]
             data = data[:data.find(end_tag)]
             data = data[:data.rfind('";')]
@@ -101,19 +100,32 @@ while True:
 
             matches_found = 0
             for offer in offers:
+                if not isinstance(offer, dict):
+                    continue
+
                 title = offer.get('title', '')
                 offer_url = offer.get('url', '')
-                offer_id = offer.get('id', 0)
-                price = offer.get("price", {}).get("regularPrice", {}).get("value", 0)
+                offer_id = str(offer.get('id', ''))
 
-                # Keyword check (case-insensitive)
+                # Safe price parsing
+                price_obj = offer.get("price") or {}
+                regular_price = price_obj.get("regularPrice") or {}
+                price = regular_price.get("value", 0)
+
+                if not price:
+                    continue
+
                 if required_keyword.lower() not in title.lower():
                     continue
-                # Price boundary check
                 if price < min_price or price > max_price:
                     continue
-                # Duplicate listing check
                 if offer_id in shown_ids:
+                    continue
+
+                shown_ids.append(offer_id)
+
+                if INITIAL_RUN:
+                    print(f"    [SEEDING] Cached existing listing: {title} ({price} PLN)", flush=True)
                     continue
 
                 matches_found += 1
@@ -122,19 +134,18 @@ while True:
 
                 notifier.send_message(f"New Match: {title}\nPrice: {price} PLN\nLink: {offer_url}")
 
-                shown_ids.append(offer_id)
-                with open("shown_ids.json", "w") as f:
-                    f.write(json.dumps(shown_ids))
+            # Save state
+            with open("shown_ids.json", "w") as f:
+                f.write(json.dumps(shown_ids))
 
-            if matches_found == 0:
+            if matches_found == 0 and not INITIAL_RUN:
                 print("    -> Parsed successfully (No new matching listings).", flush=True)
 
         except Exception as err:
             print(f"    [ERROR] Exception processing URL: {err}", flush=True)
 
-        # Randomized delay between search requests to mimic human browsing behavior
-        delay = random.uniform(SCRAPE_DELAY_MIN, SCRAPE_DELAY_MAX)
-        time.sleep(delay)
+        time.sleep(random.uniform(SCRAPE_DELAY_MIN, SCRAPE_DELAY_MAX))
 
+    INITIAL_RUN = False
     print(f"--- Cycle finished. Sleeping for {REPEAT_DELAY}s before next scan ---", flush=True)
     time.sleep(REPEAT_DELAY)
