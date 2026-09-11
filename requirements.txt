@@ -3,3 +3,4 @@ python-dotenv
 py-telegram-notifier
 flask
 curl_cffi
+google-genai
