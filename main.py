@@ -88,28 +88,29 @@ def is_listing_too_old(offer: dict, max_days=MAX_AGE_DAYS) -> bool:
         return False
 
 def analyze_listing_with_gemini(title: str, price: float, description: str = "") -> dict:
-    """Uses Gemini 2.5 Flash to evaluate the listing against target superstrat criteria, filtering out basses/acoustics/junk."""
+    """Uses Gemini to spot massive price anomalies, calculating discount percentage and bargain ratings (1-10) against estimated used market value."""
     if not gemini_client:
-        return {"is_valid_target": True, "bargain_rating": 5, "verdict": "Gemini client uninitialized (missing API key)", "is_trash": False}
+        return {"bargain_rating": 5, "discount_percentage": 0, "verdict": "Gemini client uninitialized (missing API key)"}
 
     prompt = f"""
-    Analyze this OLX guitar listing item to see if it is a high-value, undervalued modern 6/7-string superstrat or baritone.
+    Analyze this OLX guitar listing to determine if it is a massive price anomaly or an extraordinarily mispriced bargain ("one-hit wonder"). 
+    Evaluate the instrument based on its title, description, and price against its realistic, adequate used market value in Poland.
     
     Listing Title: {title}
     Price: {price} PLN
     Description: {description}
 
-    Strict Rules:
-    1. EXCLUDE completely if it is a bass guitar (bas, bass), acoustic, classical, or elektroakustyczna instrument.
-    2. EXCLUDE entry-level budget lines (e.g., Ibanez GIO, Jackson JS series, SGR by Schecter, Dean Metalman).
-    3. Evaluate if it is priced at or above brand new retail or represents a delusional markup.
+    Your tasks:
+    1. Estimate the adequate, normal used market price for this specific guitar model in PLN.
+    2. Calculate the percentage discount of the listing price compared to that adequate used price (e.g., if normal used price is 2000 PLN and asking price is 1000 PLN, the discount is 50%).
+    3. Assign a bargain rating from 1 to 10 (where 10 is an absolute once-in-a-year pricing error / massive steal).
+    4. Provide a short verdict explaining the calculation and why it's mispriced.
     
     Return a valid JSON object ONLY with the following structure:
     {{
-        "is_valid_target": true/false,
         "bargain_rating": 1 to 10,
-        "verdict": "Short explanation of the deal quality",
-        "is_trash": true/false
+        "discount_percentage": integer or float (e.g. 45),
+        "verdict": "Short explanation detailing adequate used price vs asking price and discount percentage"
     }}
     """
     try:
@@ -124,10 +125,10 @@ def analyze_listing_with_gemini(title: str, price: float, description: str = "")
         return json.loads(response.text)
     except Exception as e:
         print(f"    [GEMINI ERROR] Failed to analyze listing: {e}", flush=True)
-        return {"is_valid_target": True, "bargain_rating": 5, "verdict": "API check skipped", "is_trash": False}
+        return {"bargain_rating": 5, "discount_percentage": 0, "verdict": "API check skipped"}
 
 INITIAL_RUN = True
-print("[INIT] Initialization complete with Gemini pipeline (.env secured). Starting scraper loop...", flush=True)
+print("[INIT] Initialization complete with pure misprice hunter pipeline (.env secured). Starting scraper loop...", flush=True)
 
 while True:
     print("\n--- Starting new OLX scrape cycle ---", flush=True)
@@ -209,35 +210,25 @@ while True:
                 if price < min_price or price > max_price:
                     continue
 
-                # Quick local negative filters for basses and acoustics
-                lower_title = title.lower()
-                exclude_terms = ['bas', 'bass', 'basowa', 'akustyczna', 'akustyk', 'klasyczna', 'elektroakustyczna']
-                if any(term in lower_title for term in exclude_terms):
-                    shown_ids.add(offer_id)
-                    continue
-
                 shown_ids.add(offer_id)
 
                 if INITIAL_RUN:
                     print(f"    [SEEDING] Cached existing listing: {title} ({price} PLN)", flush=True)
                     continue
 
-                # 3. Intelligent Evaluation via Gemini API
-                print(f"    [AI ANALYZING] Checking listing with Gemini: {title}", flush=True)
+                # 3. Pure Misprice Anomaly Evaluation via Gemini API
+                print(f"    [AI ANALYZING] Checking misprice anomaly: {title}", flush=True)
                 analysis = analyze_listing_with_gemini(title, price)
-
-                if analysis.get("is_trash", False) or not analysis.get("is_valid_target", True):
-                    print(f"    [FILTERED OUT BY AI] {title} — Reason: {analysis.get('verdict')}", flush=True)
-                    continue
 
                 matches_found += 1
                 rating = analysis.get('bargain_rating', 'N/A')
+                discount = analysis.get('discount_percentage', 0)
                 verdict = analysis.get('verdict', '')
                 
-                log_line = f"    [MATCH FOUND] {title} | {price} PLN | Rating: {rating}/10 | {offer_url}"
+                log_line = f"    [MATCH FOUND] {title} | {price} PLN | Rating: {rating}/10 | Discount: {discount}% | {offer_url}"
                 print(log_line, flush=True)
 
-                notifier.send_message(f"New Match: {title}\nPrice: {price} PLN\nAI Verdict: Rating {rating}/10 - {verdict}\nLink: {offer_url}")
+                notifier.send_message(f"New Match: {title}\nPrice: {price} PLN\nAI Verdict: Rating {rating}/10 | Discount: {discount}% off adequate used price\nDetails: {verdict}\nLink: {offer_url}")
 
             # Save state
             with open("shown_ids.json", "w") as f:
