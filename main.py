@@ -220,15 +220,20 @@ while True:
                 print(f"    [AI ANALYZING] Checking misprice anomaly: {title}", flush=True)
                 analysis = analyze_listing_with_gemini(title, price)
 
-                matches_found += 1
-                rating = analysis.get('bargain_rating', 'N/A')
+                rating = analysis.get('bargain_rating', 0)
                 discount = analysis.get('discount_percentage', 0)
                 verdict = analysis.get('verdict', '')
-                
+
+                # Filter out non-bargains (Requires rating >= 7 and discount >= 30%)
+                if rating < 7 or discount < 30:
+                    print(f"    [SKIPPED] Not a heavy bargain — Rating: {rating}/10 | Discount: {discount}%", flush=True)
+                    continue
+
+                matches_found += 1
                 log_line = f"    [MATCH FOUND] {title} | {price} PLN | Rating: {rating}/10 | Discount: {discount}% | {offer_url}"
                 print(log_line, flush=True)
 
-                notifier.send_message(f"New Match: {title}\nPrice: {price} PLN\nAI Verdict: Rating {rating}/10 | Discount: {discount}% off adequate used price\nDetails: {verdict}\nLink: {offer_url}")
+                notifier.send_message(f"🚨 BARGAIN ALERT: {title}\nPrice: {price} PLN\nAI Verdict: Rating {rating}/10 | Discount: {discount}% off adequate used price\nDetails: {verdict}\nLink: {offer_url}")
 
             # Save state
             with open("shown_ids.json", "w") as f:
