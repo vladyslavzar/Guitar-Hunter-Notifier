@@ -8,6 +8,8 @@ import dotenv
 from flask import Flask
 from curl_cffi import requests
 from telegram_notifier import Notifier
+from google import genai
+from google.genai import types
 
 # --- RENDER HEALTH-CHECK SERVER ---
 app = Flask(__name__)
@@ -29,6 +31,13 @@ SCRAPE_DELAY_MAX = 6
 REPEAT_DELAY = 300
 MAX_AGE_DAYS = 14  # Cutoff for old listings
 
+dotenv.load_dotenv()
+notifier = Notifier()
+
+# Initialize Gemini Client safely using the environment variable
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+
 # Load cache safely and use a Set for O(1) lookup
 try:
     with open("shown_ids.json", "r") as f:
@@ -37,9 +46,6 @@ try:
 except Exception as e:
     print(f"[INIT] Warning: Could not read shown_ids.json ({e}). Initializing empty cache.", flush=True)
     shown_ids = set()
-
-dotenv.load_dotenv()
-notifier = Notifier()
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
@@ -66,13 +72,11 @@ def is_listing_too_old(offer: dict, max_days=MAX_AGE_DAYS) -> bool:
     """Checks created_time or pushup_time to skip listings older than MAX_AGE_DAYS."""
     raw_time = offer.get("created_time") or offer.get("pushup_time") or offer.get("created_at")
     if not raw_time:
-        return False  # If timestamp field is absent, default to processing
+        return False
 
     try:
-        # ISO string handling (e.g., '2026-09-01T12:00:00+02:00')
         if isinstance(raw_time, str):
             created_dt = datetime.fromisoformat(raw_time)
-        # Unix timestamp handling
         elif isinstance(raw_time, (int, float)):
             created_dt = datetime.fromtimestamp(raw_time, tz=timezone.utc)
         else:
@@ -83,8 +87,47 @@ def is_listing_too_old(offer: dict, max_days=MAX_AGE_DAYS) -> bool:
     except Exception:
         return False
 
+def analyze_listing_with_gemini(title: str, price: float, description: str = "") -> dict:
+    """Uses Gemini 2.5 Flash to evaluate the listing against target superstrat criteria, filtering out basses/acoustics/junk."""
+    if not gemini_client:
+        return {"is_valid_target": True, "bargain_rating": 5, "verdict": "Gemini client uninitialized (missing API key)", "is_trash": False}
+
+    prompt = f"""
+    Analyze this OLX guitar listing item to see if it is a high-value, undervalued modern 6/7-string superstrat or baritone.
+    
+    Listing Title: {title}
+    Price: {price} PLN
+    Description: {description}
+
+    Strict Rules:
+    1. EXCLUDE completely if it is a bass guitar (bas, bass), acoustic, classical, or elektroakustyczna instrument.
+    2. EXCLUDE entry-level budget lines (e.g., Ibanez GIO, Jackson JS series, SGR by Schecter, Dean Metalman).
+    3. Evaluate if it is priced at or above brand new retail or represents a delusional markup.
+    
+    Return a valid JSON object ONLY with the following structure:
+    {{
+        "is_valid_target": true/false,
+        "bargain_rating": 1 to 10,
+        "verdict": "Short explanation of the deal quality",
+        "is_trash": true/false
+    }}
+    """
+    try:
+        response = gemini_client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                temperature=0.1
+            ),
+        )
+        return json.loads(response.text)
+    except Exception as e:
+        print(f"    [GEMINI ERROR] Failed to analyze listing: {e}", flush=True)
+        return {"is_valid_target": True, "bargain_rating": 5, "verdict": "API check skipped", "is_trash": False}
+
 INITIAL_RUN = True
-print("[INIT] Initialization complete. Starting scraper loop...", flush=True)
+print("[INIT] Initialization complete with Gemini pipeline (.env secured). Starting scraper loop...", flush=True)
 
 while True:
     print("\n--- Starting new OLX scrape cycle ---", flush=True)
@@ -146,7 +189,7 @@ while True:
 
                 # 2. Skip listings older than MAX_AGE_DAYS
                 if is_listing_too_old(offer):
-                    shown_ids.add(offer_id)  # Cache ID to avoid re-checking
+                    shown_ids.add(offer_id)
                     continue
 
                 title = offer.get('title', '')
@@ -160,9 +203,17 @@ while True:
                 if not price:
                     continue
 
-                if required_keyword.lower() not in title.lower():
+                # Hardcoded keyword & price bounds pre-check
+                if required_keyword and required_keyword.lower() not in title.lower():
                     continue
                 if price < min_price or price > max_price:
+                    continue
+
+                # Quick local negative filters for basses and acoustics
+                lower_title = title.lower()
+                exclude_terms = ['bas', 'bass', 'basowa', 'akustyczna', 'akustyk', 'klasyczna', 'elektroakustyczna']
+                if any(term in lower_title for term in exclude_terms):
+                    shown_ids.add(offer_id)
                     continue
 
                 shown_ids.add(offer_id)
@@ -171,11 +222,22 @@ while True:
                     print(f"    [SEEDING] Cached existing listing: {title} ({price} PLN)", flush=True)
                     continue
 
+                # 3. Intelligent Evaluation via Gemini API
+                print(f"    [AI ANALYZING] Checking listing with Gemini: {title}", flush=True)
+                analysis = analyze_listing_with_gemini(title, price)
+
+                if analysis.get("is_trash", False) or not analysis.get("is_valid_target", True):
+                    print(f"    [FILTERED OUT BY AI] {title} — Reason: {analysis.get('verdict')}", flush=True)
+                    continue
+
                 matches_found += 1
-                log_line = f"    [MATCH FOUND] {title} | {price} PLN | {offer_url}"
+                rating = analysis.get('bargain_rating', 'N/A')
+                verdict = analysis.get('verdict', '')
+                
+                log_line = f"    [MATCH FOUND] {title} | {price} PLN | Rating: {rating}/10 | {offer_url}"
                 print(log_line, flush=True)
 
-                notifier.send_message(f"New Match: {title}\nPrice: {price} PLN\nLink: {offer_url}")
+                notifier.send_message(f"New Match: {title}\nPrice: {price} PLN\nAI Verdict: Rating {rating}/10 - {verdict}\nLink: {offer_url}")
 
             # Save state
             with open("shown_ids.json", "w") as f:
